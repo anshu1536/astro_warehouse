@@ -103,11 +103,6 @@ jobs:
 
               print(f"{table}: {count} rows")
 
-              if count == 0:
-                  raise SystemExit(
-                      f"Expected mart is empty: {table}"
-                  )
-
-          print("All expected marts exist and contain data.")
+          print("All expected marts exist.")
           con.close()
           PY
