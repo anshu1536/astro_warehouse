@@ -1,0 +1,59 @@
+flowchart LR
+
+    A[Swiss Ephemeris] --> B[Raw Layer]
+    C[Configuration] --> B
+    D[Mapping Seeds] --> E[dbt]
+
+    B --> E
+
+    subgraph E[dbt Transformation Layer]
+        S[Staging]
+        I[Intermediate]
+        F[Facts / Signals]
+        V[Versioned History<br/>SCD2]
+        N[Inference]
+        M[Marts]
+
+        S --> I
+        I --> F
+        F --> V
+        V --> N
+        N --> M
+    end
+
+    S --> S1[stg_config]
+    S --> S2[stg_ephemeris]
+    S --> S3[stg_house_positions]
+    S --> S4[stg_natal]
+
+    I --> I1[int_natal_chart]
+    I --> I2[int_transit_positions]
+    I --> I3[int_aspects]
+    I --> I4[int_house_positions]
+    I --> I5[int_motion_states]
+    I --> I6[int_domain_context]
+
+    F --> F1[Relationship Signals]
+    F --> F2[Sex / Intimacy Signals]
+    F --> F3[Marriage Signals]
+    F --> F4[Health Signals]
+    F --> F5[Job Signals]
+    F --> F6[Core Signals]
+
+    V --> V1[Signal SCD2]
+    V --> V2[Inference SCD2]
+
+    N --> N1[Relationship Inference]
+    N --> N2[Sex Inference]
+    N --> N3[Marriage Inference]
+    N --> N4[Core Inference]
+
+    M --> M1[relationship_mart]
+    M --> M2[sex_mart]
+    M --> M3[marriage_mart]
+    M --> M4[health_mart]
+    M --> M5[job_mart]
+    M --> M6[inference_mart]
+    M --> M7[transit_mart]
+
+    D --> F

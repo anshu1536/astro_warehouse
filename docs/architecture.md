@@ -1,36 +1,93 @@
-# Architecture and Incremental Contract
+# Astrology Warehouse Architecture
 
-## Layers
+## Overview
 
-### 1. Raw
-`raw_ephemeris` and `raw_houses` contain direct Swiss Ephemeris outputs. They are append-only.
+The astrology warehouse follows a layered data-warehouse architecture:
 
-### 2. Staging
-Normalizes raw rows for dbt. No interpretation.
+```text
+Swiss Ephemeris
+       │
+       ▼
+   Raw Layer
+       │
+       ▼
+    Staging
+       │
+       ▼
+  Intermediate
+       │
+       ▼
+ Signals / Facts
+       │
+       ▼
+     SCD2
+       │
+       ▼
+   Inference
+       │
+       ▼
+     Marts
+```
 
-### 3. Intermediate
-Computes aspects, orbs, motion states and house-related geometry.
+The system separates astronomical calculation, transformation, signal generation,
+historical versioning, inference, and analytical presentation.
 
-### 4. Mapping
-Explicit lookup tables hold the meaning vocabulary. This prevents meanings from being silently invented inside inference SQL.
+## Core principles
 
-### 5. Facts
-`fct_signals` produces atomic signals. `driver_group` is the anti-double-counting key. For example, station + retrograde are both Venus motion observations, not two independent votes.
+- Raw astronomical calculations remain immutable.
+- dbt performs deterministic transformations.
+- Signals are separated from inference.
+- SCD2 models preserve historical state.
+- Marts provide domain-specific analytical outputs.
+- DuckDB provides the local analytical warehouse.
 
-### 6. SCD2
-Signal and inference state histories preserve valid-from / valid-to changes.
+## Domain layers
 
-### 7. Marts
-Relationship, transit and inference marts are the user-facing analytical outputs.
+### Relationship
 
-## Incremental rule
+```text
+Transit / Natal Geometry
+        ↓
+Relationship Signals
+        ↓
+Relationship Inference
+        ↓
+relationship_mart
+```
 
-A run only adds missing raw calculation keys. dbt then rebuilds derived models from the append-only raw source. This is deliberately conservative and reproducible for a personal-scale warehouse. If the dataset becomes large, the intermediate/fact models can be converted to dbt incremental materializations using `local_datetime` as the partition boundary.
+### Sexual Intimacy
 
-## Audit rule
+```text
+Transit / Natal Geometry
+        ↓
+Sex Signals
+        ↓
+Sex Inference
+        ↓
+sex_mart
+```
 
-Every prediction must be traceable:
+### Marriage
 
-`prediction -> inference -> signal -> aspect/motion/house calculation -> raw ephemeris -> input config`
+```text
+Transit / Natal Geometry
+        ↓
+Marriage Signals
+        ↓
+Marriage Inference
+        ↓
+marriage_mart
+```
 
-No prose-only prediction is considered an auditable output.
+### Additional domains
+
+The warehouse also contains health, job, core inference, and transit marts.
+
+## Technology
+
+- Swiss Ephemeris
+- Python
+- DuckDB
+- dbt
+- Parquet
+- SQL
