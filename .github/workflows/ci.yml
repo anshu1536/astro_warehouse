@@ -79,7 +79,7 @@ jobs:
 
           expected_tables = [
               "relationship_mart",
-              "sex_mart",
+              "intimacy_mart",
               "marriage_mart",
               "health_mart",
               "job_mart",

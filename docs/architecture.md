@@ -55,16 +55,16 @@ Relationship Inference
 relationship_mart
 ```
 
-### Sexual Intimacy
+### Intimacy
 
 ```text
 Transit / Natal Geometry
         ↓
-Sex Signals
+intimacy Signals
         ↓
-Sex Inference
+intimacy Inference
         ↓
-sex_mart
+intimacy_mart
 ```
 
 ### Marriage

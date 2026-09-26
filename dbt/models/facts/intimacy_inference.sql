@@ -43,7 +43,7 @@ WITH daily AS (
 
         COUNT(*) AS total_signal_count
 
-    FROM {{ ref('sex_signals') }}
+    FROM {{ ref('intimacy_signals') }}
 
     GROUP BY local_datetime
 
@@ -102,7 +102,7 @@ SELECT
                 +
                 CASE WHEN emotional_intimacy_signals > 0 THEN 1 ELSE 0 END
             ) >= 3
-        THEN 'SEXUAL_INTIMACY_CONVERGENCE'
+        THEN 'INTIMACY_CONVERGENCE'
 
         /* Venus/Mars polarity plus relationship house */
         WHEN
@@ -112,7 +112,7 @@ SELECT
                 OR seventh_house_signals > 0
                 OR eighth_house_signals > 0
             )
-        THEN 'SEXUAL_ATTRACTION_ACTIVATION'
+        THEN 'INTIMACY_ATTRACTION_ACTIVATION'
 
         /* 8th-house emphasis */
         WHEN
@@ -137,7 +137,7 @@ SELECT
             venus_mars_signals > 0
             OR venus_signals > 0
             OR mars_signals > 0
-        THEN 'SEXUAL_ENERGY_ACTIVATION'
+        THEN 'INTIMACY_ENERGY_ACTIVATION'
 
         ELSE NULL
 
