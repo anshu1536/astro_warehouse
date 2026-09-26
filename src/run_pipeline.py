@@ -137,6 +137,7 @@ def calculation_id(chart_name, typ, local_dt, planet_code=''):
 def generate(start, end, incremental=False):
     cfg = load_config()
     chart = cfg['chart']
+    Path(DB).parent.mkdir(parents=True, exist_ok=True)
     con = duckdb.connect(DB)
     ensure_raw_table(con)
     ih = input_hash(cfg)

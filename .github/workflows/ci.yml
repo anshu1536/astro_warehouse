@@ -5,18 +5,13 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   validate:
-    name: Validate Python and dbt warehouse
+    name: Validate Python and dbt
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +22,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.14"
-          cache: "pip"
+          cache: pip
 
       - name: Install dependencies
         run: |
@@ -39,10 +34,14 @@ jobs:
           python -m compileall src
 
       - name: Validate dbt project
+        working-directory: dbt
         run: |
-          dbt parse \
-            --project-dir dbt \
-            --profiles-dir dbt
+          dbt parse
+
+      - name: Prepare warehouse directories
+        run: |
+          mkdir -p data/raw
+          mkdir -p data/warehouse
 
       - name: Generate test astrology data
         run: |
@@ -51,18 +50,14 @@ jobs:
             --end 2026-10-03
 
       - name: Load dbt seeds
+        working-directory: dbt
         run: |
-          dbt seed \
-            --project-dir dbt \
-            --profiles-dir dbt \
-            --full-refresh
+          dbt seed --full-refresh
 
       - name: Build dbt warehouse
+        working-directory: dbt
         run: |
-          dbt build \
-            --project-dir dbt \
-            --profiles-dir dbt \
-            --full-refresh
+          dbt build --full-refresh
 
       - name: Validate DuckDB marts
         run: |
@@ -88,13 +83,12 @@ jobs:
           ]
 
           rows = con.execute("""
-              SELECT table_schema, table_name
+              SELECT table_name
               FROM information_schema.tables
               WHERE table_schema = 'main_marts'
           """).fetchall()
 
-          actual_tables = {row[1] for row in rows}
-
+          actual_tables = {row[0] for row in rows}
           missing = set(expected_tables) - actual_tables
 
           if missing:
@@ -115,6 +109,5 @@ jobs:
                   )
 
           print("All expected marts exist and contain data.")
-
           con.close()
           PY
