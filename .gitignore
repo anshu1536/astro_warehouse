@@ -1,0 +1,83 @@
+# =========================
+# Python
+# =========================
+
+.venv/
+venv/
+env/
+ENV/
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# dbt
+# =========================
+
+.dbt/
+target/
+logs/
+dbt_packages/
+
+# =========================
+# DuckDB / Warehouse
+# =========================
+
+data/warehouse/*.duckdb
+data/warehouse/*.duckdb.wal
+data/warehouse/*.duckdb.tmp
+
+# =========================
+# Generated raw data
+# =========================
+
+data/raw/*.parquet
+
+# =========================
+# Jupyter
+# =========================
+
+.ipynb_checkpoints/
+
+# =========================
+# IDE / Editor
+# =========================
+
+.vscode/
+.idea/
+
+# =========================
+# OS files
+# =========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Logs / temporary files
+# =========================
+
+*.log
+*.tmp
+*.temp
+
+# =========================
+# Python tooling
+# =========================
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# =========================
+# Environment / secrets
+# =========================
+
+.env
+.env.*
+!.env.example
+dbt/.user.ymldbt/.user.yml
+
+dbt/.user.yml

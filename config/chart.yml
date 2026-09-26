@@ -1,0 +1,32 @@
+chart:
+  name: primary_chart
+  date: 1991-02-15
+  time: "06:20:00"
+  timezone: "Asia/Kolkata"
+  latitude: 25.5667
+  longitude: 84.6667
+  zodiac: sidereal
+  ayanamsha: lahiri
+  house_system: placidus
+
+engine:
+  ephemeris: swiss_ephemeris
+  planets:
+    - SUN
+    - MOON
+    - MERCURY
+    - VENUS
+    - MARS
+    - JUPITER
+    - SATURN
+    - TRUE_NODE
+  include_speed: true
+  include_houses: true
+  include_angles: true
+  include_aspects: true
+  orb_defaults:
+    conjunction: 8
+    opposition: 8
+    square: 7
+    trine: 7
+    sextile: 5

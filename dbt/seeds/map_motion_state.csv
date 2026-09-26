@@ -1,0 +1,4 @@
+motion_state,meaning
+DIRECT,forward progression
+STATIONARY,turning point state transition
+RETROGRADE,reassessment review reversal

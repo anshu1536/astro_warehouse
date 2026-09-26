@@ -1,0 +1,11 @@
+signal_code,driver_group,planet_code,domain,rule_text,priority
+VENUS_5H,VENUS_HOUSE,VENUS,romance,Venus activates the 5th house romance domain,3
+VENUS_7H,VENUS_HOUSE,VENUS,partnership,Venus activates the 7th house partnership domain,3
+VENUS_STATION,VENUS_MOTION,VENUS,relationship,Venus changes motion state near station,3
+VENUS_RETROGRADE,VENUS_MOTION,VENUS,relationship,Venus is retrograde and relationship reassessment is activated,2
+MARS_JUPITER,MARS_JUPITER,MARS,action,Mars conjunct natal Jupiter concentrates initiative and expansion,3
+MERCURY_SATURN,MERCURY_SATURN,MERCURY,communication,Mercury square natal Saturn activates communication friction or seriousness,3
+VENUS_JUPITER,VENUS_JUPITER,VENUS,relationship,Venus square natal Jupiter activates relationship values and expectations adjustment,3
+VENUS_MOON,VENUS_MOON,VENUS,emotion,Venus trine natal Moon activates affection and emotional responsiveness,2
+VENUS_SATURN,VENUS_SATURN,VENUS,relationship,Venus square natal Saturn activates seriousness boundaries and definition,3
+MERCURY_VENUS,MERCURY_VENUS,MERCURY,communication,Mercury trine natal Venus links communication with relationship symbolism,2

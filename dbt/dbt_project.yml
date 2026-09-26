@@ -1,0 +1,20 @@
+name: astro_warehouse
+version: '1.0.0'
+config-version: 2
+profile: astro_warehouse
+model-paths: [models]
+seed-paths: [seeds]
+test-paths: [tests]
+models:
+  astro_warehouse:
+    +materialized: table
+    staging:
+      +schema: staging
+    intermediate:
+      +schema: intermediate
+    mappings:
+      +schema: mappings
+    facts:
+      +schema: facts
+    marts:
+      +schema: marts
