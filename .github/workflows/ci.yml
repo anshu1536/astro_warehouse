@@ -5,13 +5,18 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
-    name: Validate Python and dbt
+    name: Validate Python and dbt warehouse
     runs-on: ubuntu-latest
 
     steps:
@@ -38,3 +43,78 @@ jobs:
           dbt parse \
             --project-dir dbt \
             --profiles-dir dbt
+
+      - name: Generate test astrology data
+        run: |
+          python src/run_pipeline.py \
+            --start 2026-09-26 \
+            --end 2026-10-03
+
+      - name: Load dbt seeds
+        run: |
+          dbt seed \
+            --project-dir dbt \
+            --profiles-dir dbt \
+            --full-refresh
+
+      - name: Build dbt warehouse
+        run: |
+          dbt build \
+            --project-dir dbt \
+            --profiles-dir dbt \
+            --full-refresh
+
+      - name: Validate DuckDB marts
+        run: |
+          python - <<'PY'
+          import duckdb
+          from pathlib import Path
+
+          db_path = Path("data/warehouse/astro.duckdb")
+
+          if not db_path.exists():
+              raise SystemExit("DuckDB warehouse was not created.")
+
+          con = duckdb.connect(str(db_path))
+
+          expected_tables = [
+              "relationship_mart",
+              "sex_mart",
+              "marriage_mart",
+              "health_mart",
+              "job_mart",
+              "inference_mart",
+              "transit_mart",
+          ]
+
+          rows = con.execute("""
+              SELECT table_schema, table_name
+              FROM information_schema.tables
+              WHERE table_schema = 'main_marts'
+          """).fetchall()
+
+          actual_tables = {row[1] for row in rows}
+
+          missing = set(expected_tables) - actual_tables
+
+          if missing:
+              raise SystemExit(
+                  f"Missing expected marts: {sorted(missing)}"
+              )
+
+          for table in expected_tables:
+              count = con.execute(
+                  f'SELECT COUNT(*) FROM main_marts."{table}"'
+              ).fetchone()[0]
+
+              print(f"{table}: {count} rows")
+
+              if count == 0:
+                  raise SystemExit(
+                      f"Expected mart is empty: {table}"
+                  )
+
+          print("All expected marts exist and contain data.")
+
+          con.close()
+          PY
