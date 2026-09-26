@@ -1,5 +1,6 @@
 import argparse, hashlib, json, math, os
 from datetime import datetime, date, timedelta, timezone
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import duckdb
