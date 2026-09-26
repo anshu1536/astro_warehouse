@@ -3,7 +3,7 @@
 WITH source_data AS (
 
     SELECT *
-    FROM {{ ref('sex_inference') }}
+    FROM {{ ref('intimacy_inference') }}
 
 )
 
